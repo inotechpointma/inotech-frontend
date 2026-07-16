@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-brand: 220 25 27;
+  --color-brand-light: 237 208 211;
+  --color-brand-dark: 179 20 22;
+
+  --color-ink: 30 30 32;
+  --color-ink-muted: 100 100 105;
+
+  --color-surface: 255 255 255;
+  --color-surface-alt: 246 245 248;
+  --color-border: 129 129 129;
+
+  --color-sale: 225 74 92;
+  --color-success: 46 160 67;
+
+  --font-sans: "Poppins", system-ui, sans-serif;
+
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 16px;
+
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-header: 0 1px 0 rgba(0, 0, 0, 0.06);
+}
+
+* {
+  border-color: rgb(var(--color-border) / 0.2);
+}
+
+body {
+  @apply bg-surface text-ink font-sans antialiased;
+}
+
+.container {
+  @apply mx-auto w-full;
+}
