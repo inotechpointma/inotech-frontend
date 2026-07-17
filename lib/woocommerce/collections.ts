@@ -1,4 +1,5 @@
 import { wpFetch } from "./client";
+import { useFixtures } from "./config";
 import { getProductsByIds } from "./products";
 import type { WCProduct } from "./types";
 
@@ -18,11 +19,15 @@ export interface WPCollection {
 }
 
 export async function getCollectionBySlug(slug: string): Promise<WPCollection | null> {
+  if (useFixtures) return null;
+
   const { data } = await wpFetch<WPCollection[]>("/collection", { slug }, { tags: ["collections"] });
   return data[0] ?? null;
 }
 
 export async function getAllCollectionSlugs(): Promise<string[]> {
+  if (useFixtures) return [];
+
   try {
     const { data } = await wpFetch<WPCollection[]>("/collection", { per_page: 100, _fields: "slug" }, {
       tags: ["collections"],

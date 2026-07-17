@@ -30,6 +30,11 @@ cp .env.example .env.local   # fill in WooCommerce REST keys, WhatsApp number, r
 npm run dev
 ```
 
+**Preview without a backend yet**: set `USE_FIXTURES=true` in `.env.local` (alongside any
+placeholder values for the other required vars) to serve realistic sample PC-retailer data from
+`lib/woocommerce/fixtures.ts` instead of hitting a real WooCommerce API — useful to run/screenshot
+this template before iNoTech's store exists. Never set this in production.
+
 ```bash
 npm run build      # production build
 npm run typecheck  # tsc --noEmit

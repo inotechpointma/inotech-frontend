@@ -1,4 +1,6 @@
 import { wooFetch } from "./client";
+import { useFixtures } from "./config";
+import { FIXTURE_BRANDS } from "./fixtures";
 import type { WCBrand } from "./types";
 
 /**
@@ -10,6 +12,8 @@ import type { WCBrand } from "./types";
 const LIST_PARAMS = { per_page: 100, hide_empty: false } as const;
 
 export async function getBrands(): Promise<WCBrand[]> {
+  if (useFixtures) return FIXTURE_BRANDS;
+
   const { data } = await wooFetch<WCBrand[]>("/products/brands", LIST_PARAMS, {
     tags: ["brands"],
   });
@@ -17,6 +21,8 @@ export async function getBrands(): Promise<WCBrand[]> {
 }
 
 export async function getBrandBySlug(slug: string): Promise<WCBrand | null> {
+  if (useFixtures) return FIXTURE_BRANDS.find((b) => b.slug === slug) ?? null;
+
   const { data } = await wooFetch<WCBrand[]>(
     "/products/brands",
     { slug, hide_empty: false },

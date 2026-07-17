@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getAllCategoryPaths, getCategoryByPath } from "@/lib/woocommerce/categories";
+import { getAllCategoryPaths, getCategoryAncestorChain, getCategoryByPath } from "@/lib/woocommerce/categories";
 import { getProducts } from "@/lib/woocommerce/products";
 import { resolveFacets } from "@/lib/woocommerce/facets";
 import { parseSearchParams, type SearchParams } from "@/lib/filters/parse-search-params";
@@ -42,9 +42,10 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   const resolvedSearchParams = await searchParams;
   const filters = parseSearchParams(resolvedSearchParams);
 
-  const [{ products, total, totalPages }, facets] = await Promise.all([
+  const [{ products, total, totalPages }, facets, ancestorChain] = await Promise.all([
     getProducts({ ...filters, category: category.id }),
     resolveFacets({ category: { id: category.id, slug: category.slug } }),
+    getCategoryAncestorChain(slug),
   ]);
 
   const currentPage = filters.page ?? 1;
@@ -53,16 +54,10 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   ).toString();
   const href = categoryHref(category.path);
 
-  const breadcrumbItems = category.path.map((_, index) => {
-    // We only have names for the final segment reliably; intermediate names come from the tree
-    // walk performed inside getCategoryByPath, so re-derive labels from `category` itself when
-    // this is the last segment, otherwise fall back to the slug.
-    const isLast = index === category.path.length - 1;
-    return {
-      name: isLast ? category.name : category.path[index]!.replace(/-/g, " "),
-      href: `/category/${category.path.slice(0, index + 1).join("/")}`,
-    };
-  });
+  const breadcrumbItems = ancestorChain.map((node) => ({
+    name: node.name,
+    href: categoryHref(node.path),
+  }));
 
   return (
     <div>

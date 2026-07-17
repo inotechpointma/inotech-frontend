@@ -19,3 +19,13 @@ export function brandHref(slug: string): string {
 export function tagHref(slug: string): string {
   return `/tag/${slug}`;
 }
+
+/** Derives the "pa_xxx" attribute taxonomy slug WooCommerce would use for a given attribute name. */
+export function attributeSlugFromName(name: string): string {
+  return `pa_${name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")}`;
+}

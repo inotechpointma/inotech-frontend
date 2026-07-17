@@ -74,6 +74,7 @@ export interface WCProduct {
   regular_price: string;
   sale_price: string;
   on_sale: boolean;
+  featured: boolean;
   stock_status: StockStatus;
   stock_quantity: number | null;
   short_description: string;

@@ -1,4 +1,5 @@
 import { wpFetch } from "@/lib/woocommerce/client";
+import { useFixtures } from "@/lib/woocommerce/config";
 
 export interface WPPost {
   id: number;
@@ -13,6 +14,8 @@ export interface WPPost {
 }
 
 export async function getPosts(page = 1, perPage = 12): Promise<{ posts: WPPost[]; totalPages: number }> {
+  if (useFixtures) return { posts: [], totalPages: 1 };
+
   const { data, totalPages } = await wpFetch<WPPost[]>(
     "/posts",
     { page, per_page: perPage, _embed: true },
@@ -22,6 +25,8 @@ export async function getPosts(page = 1, perPage = 12): Promise<{ posts: WPPost[
 }
 
 export async function getPostBySlug(slug: string): Promise<WPPost | null> {
+  if (useFixtures) return null;
+
   const { data } = await wpFetch<WPPost[]>("/posts", { slug, _embed: true }, { tags: ["posts"] });
   return data[0] ?? null;
 }

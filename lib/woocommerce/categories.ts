@@ -1,9 +1,13 @@
 import { wooFetch } from "./client";
+import { useFixtures } from "./config";
+import { FIXTURE_CATEGORIES } from "./fixtures";
 import type { CategoryNode, WCCategory } from "./types";
 
 const LIST_PARAMS = { per_page: 100, hide_empty: false } as const;
 
 export async function getAllCategories(): Promise<WCCategory[]> {
+  if (useFixtures) return FIXTURE_CATEGORIES;
+
   const { data } = await wooFetch<WCCategory[]>("/products/categories", LIST_PARAMS, {
     tags: ["categories"],
   });
@@ -35,17 +39,28 @@ export async function getCategoryTree(): Promise<CategoryNode[]> {
 
 /** Flattens the tree into a slug-path -> node lookup, used to resolve catch-all routes. */
 export async function getCategoryByPath(slugPath: string[]): Promise<CategoryNode | null> {
-  if (slugPath.length === 0) return null;
-  const tree = await getCategoryTree();
+  const chain = await getCategoryAncestorChain(slugPath);
+  return chain.at(-1) ?? null;
+}
 
-  function find(nodes: CategoryNode[], depth: number): CategoryNode | null {
-    const node = nodes.find((n) => n.slug === slugPath[depth]);
-    if (!node) return null;
-    if (depth === slugPath.length - 1) return node;
-    return find(node.children, depth + 1);
+/**
+ * Resolves every ancestor node (root to leaf) for a slug path, so breadcrumbs can show real
+ * category names at each level instead of guessing a label from the slug.
+ */
+export async function getCategoryAncestorChain(slugPath: string[]): Promise<CategoryNode[]> {
+  if (slugPath.length === 0) return [];
+  const tree = await getCategoryTree();
+  const chain: CategoryNode[] = [];
+
+  let level = tree;
+  for (const slug of slugPath) {
+    const node = level.find((n) => n.slug === slug);
+    if (!node) return [];
+    chain.push(node);
+    level = node.children;
   }
 
-  return find(tree, 0);
+  return chain;
 }
 
 export async function getSubcategories(categoryId: number): Promise<WCCategory[]> {

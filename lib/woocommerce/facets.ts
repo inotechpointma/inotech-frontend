@@ -1,20 +1,12 @@
 import { getProducts } from "./products";
 import { getConfiguredAttributesForCategory } from "@/lib/filters/facet-config";
+import { attributeSlugFromName } from "@/lib/utils/slug";
 import type { ProductQueryFilters, ResolvedFacets, WCProduct } from "./types";
 
 export interface FacetScope {
   category?: { id: number; slug: string };
   brand?: string;
   tag?: string;
-}
-
-function attrSlugFromName(name: string): string {
-  return `pa_${name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "")}`;
 }
 
 function priceOf(product: WCProduct): number {
@@ -62,7 +54,7 @@ export async function resolveFacets(scope: FacetScope): Promise<ResolvedFacets> 
 
     for (const attr of product.attributes) {
       if (!attr.visible) continue;
-      const slug = attrSlugFromName(attr.name);
+      const slug = attributeSlugFromName(attr.name);
       if (allowedAttrSlugs && !allowedAttrSlugs.includes(slug)) continue;
 
       const bucket = attributeCounts.get(slug) ?? { label: attr.name, terms: new Map<string, number>() };
