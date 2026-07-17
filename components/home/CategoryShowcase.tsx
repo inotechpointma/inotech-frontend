@@ -8,13 +8,13 @@ export function CategoryShowcase({ categories }: { categories: CategoryNode[] })
 
   return (
     <section className="container py-12">
-      <h2 className="mb-6 text-xl font-bold">Nos catégories</h2>
+      <h2 className="mb-6 text-xl font-bold">Que cherchez-vous ?</h2>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-6">
         {categories.map((category) => (
           <Link
             key={category.id}
             href={categoryHref(category.path)}
-            className="flex flex-col items-center gap-2 rounded border border-border/15 bg-surface p-4 text-center transition-shadow hover:shadow-card"
+            className="flex flex-col items-center gap-2 rounded-lg border border-border/15 bg-surface p-4 text-center transition-shadow hover:shadow-card"
           >
             <div className="relative h-16 w-16 overflow-hidden rounded-full bg-surface-alt">
               {category.image ? (

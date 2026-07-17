@@ -8,7 +8,7 @@ export function BrandStrip({ brands }: { brands: WCBrand[] }) {
 
   return (
     <section className="container py-12">
-      <h2 className="mb-6 text-xl font-bold">Nos marques</h2>
+      <h2 className="mb-6 text-xl font-bold">Acheter par marque</h2>
       <div className="flex flex-wrap items-center gap-8">
         {brands.map((brand) => (
           <Link key={brand.id} href={brandHref(brand.slug)} className="opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0">

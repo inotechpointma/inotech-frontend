@@ -16,17 +16,20 @@ export function SearchBar({ className }: { className?: string }) {
 
   return (
     <form onSubmit={handleSubmit} role="search" className={className}>
-      <div className="flex h-11 items-center rounded border border-border/30 bg-surface px-3">
+      <div className="flex h-11 items-center rounded-pill bg-surface pl-4 pr-1 text-ink">
         <input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Rechercher un produit, une marque..."
+          placeholder="Rechercher des produits"
           aria-label="Rechercher"
           className="h-full flex-1 bg-transparent text-sm outline-none placeholder:text-ink-muted"
         />
-        <button type="submit" aria-label="Lancer la recherche" className="text-ink-muted hover:text-brand">
-          🔍
+        <button
+          type="submit"
+          className="h-9 shrink-0 rounded-pill bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-dark"
+        >
+          Rechercher
         </button>
       </div>
     </form>

@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getProductBySlug } from "@/lib/woocommerce/products";
 import { formatPrice } from "@/lib/utils/format-price";
+import { siteConfig } from "@/config/site";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -23,7 +24,7 @@ export default async function OpengraphImage({ params }: { params: Promise<{ slu
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ fontSize: 28, color: "#DC191B", fontWeight: 700 }}>iNoTech</div>
+        <div style={{ fontSize: 28, color: "#DC191B", fontWeight: 700 }}>{siteConfig.shortName}</div>
         <div style={{ fontSize: 56, fontWeight: 700, marginTop: 24, color: "#1e1e20", maxWidth: 1000 }}>
           {product?.name ?? "Produit"}
         </div>

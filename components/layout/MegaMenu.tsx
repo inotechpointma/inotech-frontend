@@ -28,8 +28,8 @@ export function MegaMenu({ categories }: { categories: CategoryNode[] }) {
             <Link
               href={categoryHref(category.path)}
               className={cn(
-                "flex items-center gap-1 px-3 py-4 text-sm font-medium hover:text-brand",
-                openSlug === category.slug && "text-brand",
+                "flex items-center gap-1 px-3 py-4 text-sm font-semibold text-white/90 hover:text-white",
+                openSlug === category.slug && "text-white",
               )}
             >
               {category.name}
@@ -37,7 +37,7 @@ export function MegaMenu({ categories }: { categories: CategoryNode[] }) {
             </Link>
 
             {category.children.length > 0 && openSlug === category.slug ? (
-              <div className="absolute left-0 top-full z-40 grid min-w-[560px] grid-cols-3 gap-x-8 gap-y-2 rounded-b border border-t-0 border-border/20 bg-surface p-6 shadow-card">
+              <div className="absolute left-0 top-full z-40 grid min-w-[560px] grid-cols-3 gap-x-8 gap-y-2 rounded-b bg-surface p-6 text-ink shadow-dropdown">
                 {category.children.map((child) => (
                   <div key={child.id}>
                     <Link href={categoryHref(child.path)} className="font-semibold hover:text-brand">

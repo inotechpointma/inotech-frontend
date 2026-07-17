@@ -63,7 +63,7 @@ export function ProductInfo({ product, variations }: { product: WCProduct; varia
         product={product}
         variation={matchedVariation}
         quantity={quantity}
-        className="inline-flex h-12 w-full items-center justify-center gap-2 rounded bg-success font-semibold text-white hover:opacity-90 sm:w-auto sm:px-8"
+        className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-pill bg-whatsapp font-semibold text-white hover:opacity-90 sm:w-auto sm:px-8"
       />
     </div>
   );

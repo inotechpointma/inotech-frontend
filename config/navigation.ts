@@ -12,14 +12,17 @@ export const mainNav: NavItem[] = [
   { label: "Contact", href: "/contact" },
 ];
 
+/** Mirrors pcportable.ma's real (visible) footer columns — "Qui sommes-nous ?" / "Acheter". */
 export const footerNav = {
-  shop: [
-    { label: "Tous les produits", href: "/shop" },
-    { label: "Promotions", href: "/shop?on_sale=1" },
-    { label: "Blog", href: "/blog" },
-  ] satisfies NavItem[],
-  company: [
+  about: [
     { label: "À propos", href: "/about" },
     { label: "Contact", href: "/contact" },
+    { label: "Blog", href: "/blog" },
+  ] satisfies NavItem[],
+  shop: [
+    { label: "Pc Portable", href: "/category/pc-portable" },
+    { label: "Périphérique", href: "/category/peripherique" },
+    { label: "Pièces", href: "/category/pieces" },
+    { label: "Accessoires", href: "/category/accessoires" },
   ] satisfies NavItem[],
 };

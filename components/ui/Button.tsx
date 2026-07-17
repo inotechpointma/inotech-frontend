@@ -12,13 +12,14 @@ const variantClasses: Record<ButtonVariant, string> = {
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: "h-9 px-3 text-sm",
-  md: "h-11 px-5 text-sm",
-  lg: "h-13 px-6 text-base",
+  sm: "h-9 px-4 text-sm",
+  md: "h-11 px-6 text-sm",
+  lg: "h-13 px-8 text-base",
 };
 
+// pcportable.ma's buttons are fully rounded pills with no shadow (--btn-*-box-shadow: none).
 const baseClasses =
-  "inline-flex items-center justify-center gap-2 rounded font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none";
+  "inline-flex items-center justify-center gap-2 rounded-pill font-semibold capitalize transition-colors disabled:opacity-50 disabled:pointer-events-none";
 
 interface CommonProps {
   variant?: ButtonVariant;

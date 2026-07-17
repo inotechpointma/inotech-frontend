@@ -33,7 +33,7 @@ export function WhatsAppButton({ product, variation, quantity = 1, className }: 
       onClick={handleClick}
       className={
         className ??
-        "inline-flex h-12 items-center justify-center gap-2 rounded bg-success px-6 font-semibold text-white hover:opacity-90"
+        "inline-flex h-12 items-center justify-center gap-2 rounded-pill bg-whatsapp px-6 font-semibold text-white hover:opacity-90"
       }
     >
       <span aria-hidden>💬</span>

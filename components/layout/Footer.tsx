@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { siteConfig } from "@/config/site";
 import { footerNav } from "@/config/navigation";
 
@@ -7,16 +8,30 @@ export function Footer() {
 
   return (
     <footer className="mt-16 border-t border-border/20 bg-surface-alt">
-      <div className="container grid grid-cols-2 gap-8 py-12 md:grid-cols-4">
-        <div className="col-span-2 md:col-span-1">
-          <Link href="/" className="text-lg font-bold text-brand">
-            {siteConfig.name}
+      <div className="container grid grid-cols-2 gap-8 py-12 md:grid-cols-5">
+        <div className="col-span-2 md:col-span-2">
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/logo.png" alt="" width={32} height={32} className="h-8 w-8 rounded-full object-contain" />
+            <span className="text-lg font-heading font-bold">{siteConfig.shortName}</span>
           </Link>
-          <p className="mt-3 text-sm text-ink-muted">{siteConfig.description}</p>
+          <p className="mt-3 max-w-xs text-sm text-ink-muted">{siteConfig.description}</p>
         </div>
 
         <div>
-          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide">Boutique</h3>
+          <h3 className="mb-3 text-sm font-heading font-semibold">Qui sommes-nous ?</h3>
+          <ul className="space-y-2 text-sm text-ink-muted">
+            {footerNav.about.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} className="hover:text-brand">
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="mb-3 text-sm font-heading font-semibold">Acheter</h3>
           <ul className="space-y-2 text-sm text-ink-muted">
             {footerNav.shop.map((item) => (
               <li key={item.href}>
@@ -29,36 +44,34 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide">Société</h3>
+          <h3 className="mb-3 text-sm font-heading font-semibold">Contact</h3>
           <ul className="space-y-2 text-sm text-ink-muted">
-            {footerNav.company.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href} className="hover:text-brand">
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide">Contact</h3>
-          <ul className="space-y-2 text-sm text-ink-muted">
-            <li>{siteConfig.contactEmail}</li>
-            {siteConfig.whatsappNumber ? (
-              <li>
-                <a href={`https://wa.me/${siteConfig.whatsappNumber}`} className="hover:text-brand">
-                  WhatsApp
-                </a>
-              </li>
-            ) : null}
+            <li>Adresse : {siteConfig.address}</li>
+            <li>
+              Email :{" "}
+              <a href={`mailto:${siteConfig.contactEmail}`} className="hover:text-brand">
+                {siteConfig.contactEmail}
+              </a>
+            </li>
+            <li>
+              Téléphone :{" "}
+              <a href={`tel:${siteConfig.phone.replace(/\s/g, "")}`} className="hover:text-brand">
+                {siteConfig.phone}
+              </a>
+            </li>
           </ul>
         </div>
       </div>
 
-      <div className="border-t border-border/20 py-4">
-        <div className="container text-center text-xs text-ink-muted">
-          © {year} {siteConfig.name}. Tous droits réservés.
+      <div className="border-t border-border/20 py-6">
+        <div className="container flex flex-col items-center justify-between gap-3 text-xs text-ink-muted sm:flex-row">
+          <div className="flex items-center gap-2">
+            <span aria-hidden>🔒</span>
+            Paiement 100% sécurisé — commande directe par WhatsApp, sans CB.
+          </div>
+          <span>
+            {siteConfig.shortName} © {year}
+          </span>
         </div>
       </div>
     </footer>

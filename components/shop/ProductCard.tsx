@@ -9,9 +9,12 @@ import type { WCProduct } from "@/lib/woocommerce/types";
 export function ProductCard({ product }: { product: WCProduct }) {
   const image = product.images[0];
   const brand = product.brands?.[0];
+  const regular = Number(product.regular_price);
+  const current = Number(product.price);
+  const percentOff = regular > 0 && current < regular ? Math.round(((regular - current) / regular) * 100) : null;
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded border border-border/15 bg-surface shadow-card transition-shadow hover:shadow-lg">
+    <article className="group relative flex flex-col overflow-hidden rounded-lg border border-border/15 bg-surface">
       <div className="relative aspect-square overflow-hidden bg-surface-alt">
         <Link href={productHref(product.slug)} className="block h-full w-full">
           {image ? (
@@ -26,7 +29,7 @@ export function ProductCard({ product }: { product: WCProduct }) {
         </Link>
 
         <div className="pointer-events-none absolute left-2 top-2 flex flex-col gap-1">
-          {product.on_sale ? <Badge tone="sale">Promo</Badge> : null}
+          {product.on_sale ? <Badge tone="sale">{percentOff ? `-${percentOff}%` : "Promo"}</Badge> : null}
           {product.stock_status !== "instock" ? <Badge tone="outofstock">Rupture</Badge> : null}
         </div>
 

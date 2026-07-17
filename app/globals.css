@@ -2,37 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Tokens extracted from pcportable.ma (Woodmart theme + Elementor kit-15), see
+ * README "Design system" section for the full source analysis.
+ */
 :root {
+  /* Brand red — pcportable.ma's header nav bar / logo accent (rgb(220,25,27)). */
   --color-brand: 220 25 27;
   --color-brand-light: 237 208 211;
   --color-brand-dark: 179 20 22;
 
-  --color-ink: 30 30 32;
-  --color-ink-muted: 100 100 105;
+  /* Header general row is solid black on the source site. */
+  --color-header: 0 0 0;
+
+  --color-ink: 36 36 36; /* --wd-title-color #242424 */
+  --color-ink-muted: 118 118 118; /* --wd-text-color #767676 */
 
   --color-surface: 255 255 255;
-  --color-surface-alt: 246 245 248;
+  --color-surface-alt: 247 247 247; /* --color-gray-100 #f7f7f7 */
   --color-border: 129 129 129;
 
-  --color-sale: 225 74 92;
-  --color-success: 46 160 67;
+  /* WooCommerce product-label overrides on the source site. */
+  --color-sale: 140 188 103; /* onsale badge — green, not red */
+  --color-featured: 225 74 92; /* featured badge — pink-red */
+  --color-outofstock: 13 6 37; /* near-black violet */
+  --color-success: 69 150 71; /* notices-success-bg */
+  --color-whatsapp: 37 211 102; /* #25d366 */
 
-  --font-sans: "Poppins", system-ui, sans-serif;
+  --font-sans: "Albert Sans", Arial, Helvetica, sans-serif;
+  --font-heading: "Urbanist", Arial, Helvetica, sans-serif;
 
-  --radius-sm: 4px;
-  --radius: 8px;
-  --radius-lg: 16px;
+  /* --wd-brd-radius: 20px general; buttons/search are fully rounded pills. */
+  --radius-sm: 6px;
+  --radius: 20px;
+  --radius-lg: 28px;
+  --radius-badge: 12px;
+  --radius-pill: 35px;
 
-  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
-  --shadow-header: 0 1px 0 rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 0 3px rgba(0, 0, 0, 0.1);
+  --shadow-header: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-dropdown: 0 0 3px rgba(0, 0, 0, 0.15);
 }
 
 * {
   border-color: rgb(var(--color-border) / 0.2);
 }
 
+html {
+  font-size: 15px;
+}
+
 body {
   @apply bg-surface text-ink font-sans antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-heading font-semibold text-ink;
 }
 
 .container {
