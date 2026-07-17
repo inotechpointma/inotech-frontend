@@ -10,9 +10,8 @@ export function Footer() {
     <footer className="mt-16 border-t border-border/20 bg-surface-alt">
       <div className="container grid grid-cols-2 gap-8 py-12 md:grid-cols-5">
         <div className="col-span-2 md:col-span-2">
-          <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo.png" alt="" width={32} height={32} className="h-8 w-8 rounded-full object-contain" />
-            <span className="text-lg font-heading font-bold">{siteConfig.shortName}</span>
+          <Link href="/" className="flex items-center">
+            <Image src="/logo-dark.svg" alt={siteConfig.shortName} width={140} height={35} className="h-8 w-auto" />
           </Link>
           <p className="mt-3 max-w-xs text-sm text-ink-muted">{siteConfig.description}</p>
         </div>
@@ -53,12 +52,14 @@ export function Footer() {
                 {siteConfig.contactEmail}
               </a>
             </li>
-            <li>
-              Téléphone :{" "}
-              <a href={`tel:${siteConfig.phone.replace(/\s/g, "")}`} className="hover:text-brand">
-                {siteConfig.phone}
-              </a>
-            </li>
+            {siteConfig.phone ? (
+              <li>
+                Téléphone :{" "}
+                <a href={`tel:${siteConfig.phone.replace(/\s/g, "")}`} className="hover:text-brand">
+                  {siteConfig.phone}
+                </a>
+              </li>
+            ) : null}
           </ul>
         </div>
       </div>

@@ -1,8 +1,11 @@
-# iNoTech — Headless WooCommerce Frontend for PCPORTABLE.MA
+# iNoTech — Headless WooCommerce Frontend
 
-Next.js (App Router) storefront rebuilding pcportable.ma (WooCommerce + Woodmart theme +
-Elementor, hosted on Hostinger) as a headless frontend. No cart or payment gateway — every
-product page ends in a prefilled WhatsApp inquiry instead of checkout.
+Next.js (App Router) storefront template for iNoTech's future WooCommerce store. The **layout
+and design system are cloned from pcportable.ma** (WooCommerce + Woodmart theme + Elementor) as a
+reference — see "Design system" below — but this project connects only to **iNoTech's own**
+WooCommerce/WordPress backend (`WORDPRESS_API_URL` etc. in `.env`), never to pcportable.ma. No
+cart or payment gateway — every product page ends in a prefilled WhatsApp inquiry instead of
+checkout.
 
 ## Stack
 
@@ -33,10 +36,12 @@ npm run typecheck  # tsc --noEmit
 npm run lint       # eslint
 ```
 
-## Design system (extracted from pcportable.ma)
+## Design system (cloned from pcportable.ma as a reference template)
 
 Tokens live in `app/globals.css` (CSS custom properties) and are wired into `tailwind.config.js`.
-Source values, from a full analysis of the site's rendered HTML/CSS (Woodmart theme):
+Source values, from a full analysis of pcportable.ma's rendered HTML/CSS (Woodmart theme) — the
+**visual design only**; no live connection or data from that site is used anywhere in this
+project:
 
 | Token | Value | Source |
 |---|---|---|
@@ -54,9 +59,9 @@ Source values, from a full analysis of the site's rendered HTML/CSS (Woodmart th
 | Container | 1660px (very wide) | `--wd-container-w` |
 | Currency | MAD, literal suffix (no visible language/currency switcher despite WPML being installed) | rendered price markup |
 
-Real store details carried over into `config/site.ts`: WhatsApp inquiry number
-`+212 6 63 66 50 83` (from the site's chat widget), header click-to-call number
-`+212 6 22 85 00 36`, address `216, Rue 102, Lot Loubna Sidi Maarouf, 20280 Casablanca`.
+`config/site.ts` holds iNoTech's own (currently placeholder) name, WhatsApp number, phone, email,
+and address — fill these in via `.env` once iNoTech's details are available. Nothing from
+pcportable.ma's real business info (their actual phone/address/logo) is used here.
 
 **Intentionally not reproduced**: the source site has two dead sections — a secondary top bar
 (About/Partners/Contact/FAQ links) hidden at every breakpoint by conflicting CSS classes, and a
