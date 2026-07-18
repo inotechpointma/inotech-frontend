@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Albert_Sans, Urbanist } from "next/font/google";
+import { Manrope } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloatingButton } from "@/components/layout/WhatsAppFloatingButton";
@@ -7,17 +7,10 @@ import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { baseMetadata } from "@/lib/seo/metadata";
 import "./globals.css";
 
-const albertSans = Albert_Sans({
+const manrope = Manrope({
   subsets: ["latin"],
-  weight: ["400", "600"],
-  variable: "--font-sans",
-  display: "swap",
-});
-
-const urbanist = Urbanist({
-  subsets: ["latin"],
-  weight: ["600", "700"],
-  variable: "--font-heading",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-manrope",
   display: "swap",
 });
 
@@ -25,10 +18,13 @@ export const metadata: Metadata = baseMetadata();
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${albertSans.variable} ${urbanist.variable}`}>
+    <html lang="fr" className={manrope.variable}>
       <body>
+        <a className="skip-link" href="#main">
+          Aller au contenu
+        </a>
         <Header />
-        <main>{children}</main>
+        <main id="main">{children}</main>
         <Footer />
         <WhatsAppFloatingButton />
         <ScrollToTop />

@@ -1,63 +1,72 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "@/components/ui/Badge";
-import { ProductPrice } from "@/components/product/ProductPrice";
+import { WhatsAppButton } from "@/components/product/WhatsAppButton";
 import { WishlistButton } from "@/components/shop/WishlistButton";
+import { ProductQuickView } from "@/components/shop/ProductQuickView";
+import { formatPrice } from "@/lib/utils/format-price";
 import { productHref } from "@/lib/utils/slug";
 import type { WCProduct } from "@/lib/woocommerce/types";
 
+const LOW_STOCK_THRESHOLD = 5;
+
+/**
+ * Canonical product card — structure/classes ported from inotech-home.html (.product-card,
+ * .product-media, .product-label, .product-actions, .icon-button, .product-body, .quick-add).
+ * All content comes from the WCProduct passed in; the only presentational decision made here is
+ * which single label wins when several conditions are true (out of stock > sale > featured > low
+ * stock) and the low-stock threshold itself.
+ */
 export function ProductCard({ product }: { product: WCProduct }) {
   const image = product.images[0];
-  const brand = product.brands?.[0];
-  const regular = Number(product.regular_price);
-  const current = Number(product.price);
-  const percentOff = regular > 0 && current < regular ? Math.round(((regular - current) / regular) * 100) : null;
+  const available = product.stock_status === "instock";
+  const lowStock = available && product.stock_quantity !== null && product.stock_quantity <= LOW_STOCK_THRESHOLD;
+
+  let label: { tone: "sale" | "featured" | "warning" | "danger"; text: string } | null = null;
+  if (!available) {
+    label = { tone: "danger", text: "Rupture" };
+  } else if (product.on_sale) {
+    label = { tone: "sale", text: "Promo" };
+  } else if (product.featured) {
+    label = { tone: "featured", text: "Nouveau" };
+  } else if (lowStock) {
+    label = { tone: "warning", text: "Stock limité" };
+  }
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-lg border border-border/15 bg-surface">
-      <div className="relative aspect-square overflow-hidden bg-surface-alt">
-        <Link href={productHref(product.slug)} className="block h-full w-full">
-          {image ? (
-            <Image
-              src={image.src}
-              alt={image.alt || product.name}
-              fill
-              sizes="(max-width: 768px) 50vw, 25vw"
-              className="object-contain p-4 transition-transform group-hover:scale-105"
-            />
+    <article className="product-card">
+      <div className="product-media">
+        <Link href={productHref(product.slug)} aria-label={product.name}>
+          {image ? <Image src={image.src} alt={image.alt || product.name} fill sizes="(max-width: 768px) 50vw, 20vw" /> : null}
+        </Link>
+
+        {label ? <span className={`product-label ${label.tone}`}>{label.text}</span> : null}
+
+        <div className="product-actions" aria-label="Actions produit">
+          <WishlistButton item={{ id: product.id, slug: product.slug, name: product.name, price: product.price, image: image?.src ?? null }} />
+          <ProductQuickView product={product} />
+        </div>
+      </div>
+
+      <div className="product-body">
+        {product.categories[0] ? <p className="product-category">{product.categories[0].name}</p> : null}
+        <Link href={productHref(product.slug)}>
+          <h3 className="product-title">{product.name}</h3>
+        </Link>
+        <div className="product-price">
+          {product.on_sale && product.regular_price !== product.price ? (
+            <span className="old-price">{formatPrice(product.regular_price)}</span>
           ) : null}
-        </Link>
-
-        <div className="pointer-events-none absolute left-2 top-2 flex flex-col gap-1">
-          {product.on_sale ? <Badge tone="sale">{percentOff ? `-${percentOff}%` : "Promo"}</Badge> : null}
-          {product.stock_status !== "instock" ? <Badge tone="outofstock">Rupture</Badge> : null}
-        </div>
-
-        <WishlistButton
-          className="absolute right-2 top-2"
-          item={{ id: product.id, slug: product.slug, name: product.name, price: product.price, image: image?.src ?? null }}
-        />
-      </div>
-
-      <div className="flex flex-1 flex-col gap-1 p-3">
-        {brand ? <span className="text-xs uppercase tracking-wide text-ink-muted">{brand.name}</span> : null}
-
-        <Link href={productHref(product.slug)} className="line-clamp-2 text-sm font-medium hover:text-brand">
-          {product.name}
-        </Link>
-
-        {product.average_rating !== "0.00" ? (
-          <div className="text-xs text-ink-muted" aria-label={`Note ${product.average_rating} sur 5`}>
-            {"★".repeat(Math.round(Number(product.average_rating)))}
-            {"☆".repeat(5 - Math.round(Number(product.average_rating)))}
-            <span className="ml-1">({product.rating_count})</span>
-          </div>
-        ) : null}
-
-        <div className="mt-auto pt-2">
-          <ProductPrice price={product.price} regularPrice={product.regular_price} onSale={product.on_sale} />
+          <span>{formatPrice(product.price)}</span>
         </div>
       </div>
+
+      {available ? (
+        <WhatsAppButton product={product} label="Commander sur WhatsApp" showLabel className="quick-add" />
+      ) : (
+        <div className="quick-add unavailable">
+          <span>Indisponible</span>
+        </div>
+      )}
     </article>
   );
 }

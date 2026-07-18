@@ -7,23 +7,28 @@ export function CategoryShowcase({ categories }: { categories: CategoryNode[] })
   if (categories.length === 0) return null;
 
   return (
-    <section className="container py-12">
-      <h2 className="mb-6 text-xl font-bold">Que cherchez-vous ?</h2>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-6">
-        {categories.map((category) => (
-          <Link
-            key={category.id}
-            href={categoryHref(category.path)}
-            className="flex flex-col items-center gap-2 rounded-lg border border-border/15 bg-surface p-4 text-center transition-shadow hover:shadow-card"
-          >
-            <div className="relative h-16 w-16 overflow-hidden rounded-full bg-surface-alt">
-              {category.image ? (
-                <Image src={category.image.src} alt={category.name} fill sizes="64px" className="object-contain p-2" />
-              ) : null}
-            </div>
-            <span className="text-sm font-medium">{category.name}</span>
+    <section className="section" id="categories">
+      <div className="container">
+        <div className="section-title-row">
+          <div>
+            <h2>Que cherchez-vous ?</h2>
+            <p>Accédez rapidement aux principales familles de produits.</p>
+          </div>
+          <Link className="text-link" href="/shop">
+            Voir tout le catalogue →
           </Link>
-        ))}
+        </div>
+
+        <div className="category-strip">
+          {categories.map((category) => (
+            <Link key={category.id} className="category-tile" href={categoryHref(category.path)} aria-label={`Voir ${category.name}`}>
+              <span className="category-image">
+                {category.image ? <Image src={category.image.src} alt="" loading="lazy" fill sizes="120px" /> : null}
+              </span>
+              <strong>{category.name}</strong>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );

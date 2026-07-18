@@ -4,14 +4,14 @@ import type { WCProduct } from "@/lib/woocommerce/types";
 export function ProductGrid({ products }: { products: WCProduct[] }) {
   if (products.length === 0) {
     return (
-      <div className="flex min-h-[240px] items-center justify-center rounded border border-dashed border-border/30 text-ink-muted">
+      <div className="section-title-row" style={{ justifyContent: "center", color: "var(--muted)" }}>
         Aucun produit ne correspond à ces critères.
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+    <div className="product-grid">
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

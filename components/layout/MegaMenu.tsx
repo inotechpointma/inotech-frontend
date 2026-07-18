@@ -1,69 +1,87 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import type { CategoryNode } from "@/lib/woocommerce/types";
+import { SearchBar } from "@/components/layout/SearchBar";
+import { siteConfig } from "@/config/site";
 import { categoryHref } from "@/lib/utils/slug";
 import { cn } from "@/lib/utils/cn";
+import type { CategoryNode } from "@/lib/woocommerce/types";
 
 /**
- * Renders straight off the WooCommerce category tree — adding a category/subcategory in Woo
- * makes it appear here automatically, no code change required.
+ * Full header shell — logo, search, tools, and the category nav row — ported from
+ * inotech-home.html's .site-header/.header-main/.category-nav. The category list itself is
+ * root-level nodes from the live WooCommerce category tree (categories prop, already fetched by
+ * Header.tsx), so a new/renamed category shows up automatically, no code change needed.
  */
 export function MegaMenu({ categories }: { categories: CategoryNode[] }) {
-  const [openSlug, setOpenSlug] = useState<string | null>(null);
+  const [navOpen, setNavOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  if (!categories.length) return null;
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <nav className="hidden lg:block" aria-label="Catégories">
-      <ul className="flex items-center gap-1">
-        {categories.map((category) => (
-          <li
-            key={category.id}
-            className="relative"
-            onMouseEnter={() => setOpenSlug(category.slug)}
-            onMouseLeave={() => setOpenSlug((current) => (current === category.slug ? null : current))}
-          >
-            <Link
-              href={categoryHref(category.path)}
-              className={cn(
-                "flex items-center gap-1 px-3 py-4 text-sm font-semibold text-white/90 hover:text-white",
-                openSlug === category.slug && "text-white",
-              )}
-            >
-              {category.name}
-              {category.children.length > 0 ? <span aria-hidden>⌄</span> : null}
-            </Link>
+    <header className={cn("site-header", scrolled && "scrolled")}>
+      <div className="container header-main">
+        <Link className="logo" href="/" aria-label={`${siteConfig.shortName} accueil`}>
+          <span className="logo-mark">
+            <svg viewBox="0 0 32 32" aria-hidden="true">
+              <path d="M8 8h16v16H8z" />
+              <path d="M12 13h8M12 18h5" />
+            </svg>
+          </span>
+          <span>{siteConfig.shortName}</span>
+        </Link>
 
-            {category.children.length > 0 && openSlug === category.slug ? (
-              <div className="absolute left-0 top-full z-40 grid min-w-[560px] grid-cols-3 gap-x-8 gap-y-2 rounded-b bg-surface p-6 text-ink shadow-dropdown">
-                {category.children.map((child) => (
-                  <div key={child.id}>
-                    <Link href={categoryHref(child.path)} className="font-semibold hover:text-brand">
-                      {child.name}
-                    </Link>
-                    {child.children.length > 0 ? (
-                      <ul className="mt-2 space-y-1">
-                        {child.children.map((grandchild) => (
-                          <li key={grandchild.id}>
-                            <Link
-                              href={categoryHref(grandchild.path)}
-                              className="text-sm text-ink-muted hover:text-brand"
-                            >
-                              {grandchild.name}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            ) : null}
-          </li>
-        ))}
-      </ul>
-    </nav>
+        <SearchBar />
+
+        <div className="header-tools">
+          <button
+            className="nav-toggle"
+            type="button"
+            aria-expanded={navOpen}
+            aria-controls="categoryNav"
+            aria-label="Ouvrir le menu"
+            onClick={() => setNavOpen((v) => !v)}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </button>
+          {siteConfig.phone ? (
+            <a className="header-tool phone-tool" href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.4 2.1L8.1 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4 13 13 0 0 0 2.9.7 2 2 0 0 1 1.6 1.9Z" />
+              </svg>
+              <span className="tool-label">Conseil</span>
+            </a>
+          ) : null}
+          <Link className="header-tool account-tool" href="/account">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 21a8 8 0 0 1 16 0" />
+            </svg>
+            <span className="tool-label">Mon compte</span>
+          </Link>
+        </div>
+      </div>
+
+      <nav className={cn("category-nav", navOpen && "open")} id="categoryNav" aria-label="Catégories principales">
+        <div className="container">
+          <Link className="all-products" href="/shop" onClick={() => setNavOpen(false)}>
+            ☰ Tous les produits
+          </Link>
+          {categories.map((category) => (
+            <Link key={category.id} href={categoryHref(category.path)} onClick={() => setNavOpen(false)}>
+              {category.name}
+            </Link>
+          ))}
+        </div>
+      </nav>
+    </header>
   );
 }
