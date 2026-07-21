@@ -3,6 +3,7 @@ import { useFixtures } from "./config";
 import { FIXTURE_PRODUCTS, FIXTURE_VARIATIONS } from "./fixtures";
 import { buildProductQuery } from "@/lib/filters/build-query";
 import { attributeSlugFromName } from "@/lib/utils/slug";
+import { getTagBySlug } from "./tags";
 import type { ProductQueryFilters, ProductQueryResult, WCProduct, WCVariation } from "./types";
 
 function matchesFixtureFilters(product: WCProduct, filters: ProductQueryFilters): boolean {
@@ -131,10 +132,54 @@ export async function getProductsByIds(ids: number[]): Promise<WCProduct[]> {
 export async function getAllProductSlugs(limit = 200): Promise<string[]> {
   if (useFixtures) return FIXTURE_PRODUCTS.map((p) => p.slug);
 
+  const perPage = 100; // WooCommerce hard max — never exceed this
+  const slugs: string[] = [];
+  let page = 1;
+
+  while (slugs.length < limit) {
+    const { data } = await wooFetch<WCProduct[]>(
+      "/products",
+      {
+        per_page: Math.min(perPage, limit - slugs.length),
+        page,
+        status: "publish",
+        _fields: "slug",
+      },
+      { tags: ["products"] },
+    );
+
+    slugs.push(...data.map((p) => p.slug));
+
+    // last page reached — WooCommerce returned fewer items than requested
+    if (data.length < perPage) break;
+
+    page++;
+  }
+
+  return slugs;
+}
+
+/**
+ * Fetches products belonging to a single tag, resolved by slug.
+ * Used for homepage sections like "Gaming" that pull from one tag only.
+ */
+export async function getProductsByTag(
+  tagSlug: string,
+  perPage = 6,
+): Promise<WCProduct[]> {
+  if (useFixtures) {
+    return FIXTURE_PRODUCTS
+      .filter((p) => p.tags.some((t) => t.slug === tagSlug))
+      .slice(0, perPage);
+  }
+
+  const tag = await getTagBySlug(tagSlug);
+  if (!tag) return [];
+
   const { data } = await wooFetch<WCProduct[]>(
     "/products",
-    { per_page: limit, status: "publish", _fields: "slug" },
-    { tags: ["products"] },
+    { tag: tag.id, per_page: perPage, status: "publish" },
+    { tags: ["products", `tag:${tag.id}`] },
   );
-  return data.map((p) => p.slug);
+  return data;
 }

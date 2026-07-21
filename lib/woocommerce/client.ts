@@ -10,7 +10,8 @@ export type WooTag =
   | "posts"
   | `product:${number}`
   | `category:${number}`
-  | `brand:${number}`;
+  | `brand:${number}`
+  | `tag:${string}`;
 
 interface WooFetchOptions {
   /** Cache tags for on-demand revalidation via app/api/revalidate. */

@@ -8,15 +8,11 @@ import { categoryHref } from "@/lib/utils/slug";
 import { cn } from "@/lib/utils/cn";
 import type { CategoryNode } from "@/lib/woocommerce/types";
 
-/**
- * Full header shell — logo, search, tools, and the category nav row — ported from
- * inotech-home.html's .site-header/.header-main/.category-nav. The category list itself is
- * root-level nodes from the live WooCommerce category tree (categories prop, already fetched by
- * Header.tsx), so a new/renamed category shows up automatically, no code change needed.
- */
 export function MegaMenu({ categories }: { categories: CategoryNode[] }) {
   const [navOpen, setNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -24,62 +20,107 @@ export function MegaMenu({ categories }: { categories: CategoryNode[] }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const activeCategory = categories.find((c) => c.id === activeCategoryId) ?? null;
+
+  const closeCategories = () => {
+    setCategoriesOpen(false);
+    setActiveCategoryId(null);
+  };
+
   return (
     <header className={cn("site-header", scrolled && "scrolled")}>
       <div className="container header-main">
         <Link className="logo" href="/" aria-label={`${siteConfig.shortName} accueil`}>
-          <span className="logo-mark">
-            <svg viewBox="0 0 32 32" aria-hidden="true">
-              <path d="M8 8h16v16H8z" />
-              <path d="M12 13h8M12 18h5" />
-            </svg>
-          </span>
-          <span>{siteConfig.shortName}</span>
+          <img src="/inotech_logo_main.svg" alt={siteConfig.shortName} width={150} />
         </Link>
 
         <SearchBar />
-
-        <div className="header-tools">
-          <button
-            className="nav-toggle"
-            type="button"
-            aria-expanded={navOpen}
-            aria-controls="categoryNav"
-            aria-label="Ouvrir le menu"
-            onClick={() => setNavOpen((v) => !v)}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            </svg>
-          </button>
-          {siteConfig.phone ? (
-            <a className="header-tool phone-tool" href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.4 2.1L8.1 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4 13 13 0 0 0 2.9.7 2 2 0 0 1 1.6 1.9Z" />
-              </svg>
-              <span className="tool-label">Conseil</span>
-            </a>
-          ) : null}
-          <Link className="header-tool account-tool" href="/account">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 21a8 8 0 0 1 16 0" />
-            </svg>
-            <span className="tool-label">Mon compte</span>
-          </Link>
-        </div>
       </div>
 
       <nav className={cn("category-nav", navOpen && "open")} id="categoryNav" aria-label="Catégories principales">
-        <div className="container">
+        <div className="container nav-links">
           <Link className="all-products" href="/shop" onClick={() => setNavOpen(false)}>
             ☰ Tous les produits
           </Link>
-          {categories.map((category) => (
-            <Link key={category.id} href={categoryHref(category.path)} onClick={() => setNavOpen(false)}>
-              {category.name}
-            </Link>
-          ))}
+
+          <div
+            className="nav-item has-dropdown"
+            onMouseEnter={() => setCategoriesOpen(true)}
+            onMouseLeave={closeCategories}
+          >
+            <button
+              type="button"
+              className="nav-trigger"
+              aria-expanded={categoriesOpen}
+              aria-controls="categoriesDropdown"
+              onClick={() => setCategoriesOpen((v) => !v)}
+            >
+              Catégories
+              <svg
+                className={cn("chevron", categoriesOpen && "rotated")}
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+
+            <div id="categoriesDropdown" className={cn("dropdown-panel", categoriesOpen && "open")}>
+              <ul className="categories-list">
+                {categories.map((category) => (
+                  <li
+                    key={category.id}
+                    className="category-item"
+                    onMouseEnter={() => setActiveCategoryId(category.id)}
+                  >
+                    <Link
+                      href={categoryHref(category.path)}
+                      className={cn("category-link", activeCategoryId === category.id && "active")}
+                      onClick={closeCategories}
+                    >
+                      {category.name}
+                      {category.children?.length ? (
+                        <svg className="chevron-right" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      ) : null}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
+              {activeCategory?.children?.length ? (
+                <div className="submenu-panel">
+                  <p className="submenu-heading">{activeCategory.name}</p>
+                  <ul className="submenu-chips">
+                    <li>
+                      <Link
+                        href={categoryHref(activeCategory.path)}
+                        className="submenu-view-all"
+                        onClick={closeCategories}
+                      >
+                        Voir tout
+                      </Link>
+                    </li>
+                    {activeCategory.children.map((child) => (
+                      <li key={child.id}>
+                        <Link href={categoryHref(child.path)} onClick={closeCategories}>
+                          {child.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </div>
+          </div>
+
+          <Link href="/about" onClick={() => setNavOpen(false)}>
+            Qui sommes-nous&nbsp;?
+          </Link>
+          <Link href="/contact" onClick={() => setNavOpen(false)}>
+            Contact us
+          </Link>
         </div>
       </nav>
     </header>

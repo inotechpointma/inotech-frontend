@@ -10,13 +10,7 @@ export function Footer() {
       <div className="container footer-main">
         <div className="footer-about">
           <Link className="logo" href="/" style={{ color: "var(--primary-900)" }}>
-            <span className="logo-mark">
-              <svg viewBox="0 0 32 32" aria-hidden="true">
-                <path d="M8 8h16v16H8z" />
-                <path d="M12 13h8M12 18h5" />
-              </svg>
-            </span>
-            <span>{siteConfig.shortName}</span>
+            <img src="/inotech_logo_main.svg" alt={siteConfig.shortName} width={200} />
           </Link>
           <p>{siteConfig.description}</p>
         </div>
