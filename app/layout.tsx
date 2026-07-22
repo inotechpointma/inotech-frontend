@@ -6,6 +6,7 @@ import { WhatsAppFloatingButton } from "@/components/layout/WhatsAppFloatingButt
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { baseMetadata } from "@/lib/seo/metadata";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next"
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <WhatsAppFloatingButton />
         <ScrollToTop />
+        <Analytics />
       </body>
     </html>
   );
