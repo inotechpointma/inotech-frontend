@@ -12,7 +12,6 @@ export function MegaMenu({ categories }: { categories: CategoryNode[] }) {
   const [navOpen, setNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
-  const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -20,12 +19,7 @@ export function MegaMenu({ categories }: { categories: CategoryNode[] }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const activeCategory = categories.find((c) => c.id === activeCategoryId) ?? null;
-
-  const closeCategories = () => {
-    setCategoriesOpen(false);
-    setActiveCategoryId(null);
-  };
+  const closeCategories = () => setCategoriesOpen(false);
 
   return (
     <header className={cn("site-header", scrolled && "scrolled")}>
@@ -37,10 +31,10 @@ export function MegaMenu({ categories }: { categories: CategoryNode[] }) {
         <SearchBar />
       </div>
 
-      <nav className={cn("category-nav", navOpen && "open")} id="categoryNav" aria-label="Catégories principales">
+      <nav className={cn("category-nav", navOpen && "open")} id="categoryNav" aria-label="Navigation principale">
         <div className="container nav-links">
           <Link className="all-products" href="/shop" onClick={() => setNavOpen(false)}>
-            ☰ Tous les produits
+            ☰ Boutique
           </Link>
 
           <div
@@ -66,52 +60,38 @@ export function MegaMenu({ categories }: { categories: CategoryNode[] }) {
             </button>
 
             <div id="categoriesDropdown" className={cn("dropdown-panel", categoriesOpen && "open")}>
-              <ul className="categories-list">
+              <div className="container dropdown-inner mega-grid">
                 {categories.map((category) => (
-                  <li
-                    key={category.id}
-                    className="category-item"
-                    onMouseEnter={() => setActiveCategoryId(category.id)}
-                  >
+                  <div key={category.id} className="mega-column">
                     <Link
                       href={categoryHref(category.path)}
-                      className={cn("category-link", activeCategoryId === category.id && "active")}
+                      className="mega-column-heading"
                       onClick={closeCategories}
                     >
                       {category.name}
-                      {category.children?.length ? (
-                        <svg className="chevron-right" viewBox="0 0 24 24" aria-hidden="true">
-                          <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      ) : null}
                     </Link>
-                  </li>
-                ))}
-              </ul>
 
-              {activeCategory?.children?.length ? (
-                <div className="submenu-panel">
-                  <p className="submenu-heading">{activeCategory.name}</p>
-                  <ul className="submenu-chips">
-                    <li>
-                      <Link
-                        href={categoryHref(activeCategory.path)}
-                        className="submenu-view-all"
-                        onClick={closeCategories}
-                      >
-                        Voir tout
-                      </Link>
-                    </li>
-                    {activeCategory.children.map((child) => (
-                      <li key={child.id}>
-                        <Link href={categoryHref(child.path)} onClick={closeCategories}>
-                          {child.name}
+                    <ul className="mega-column-list">
+                      <li>
+                        <Link
+                          href={categoryHref(category.path)}
+                          className="mega-view-all"
+                          onClick={closeCategories}
+                        >
+                          Voir tout
                         </Link>
                       </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
+                      {category.children?.map((child) => (
+                        <li key={child.id}>
+                          <Link href={categoryHref(child.path)} onClick={closeCategories}>
+                            {child.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 

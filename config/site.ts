@@ -6,8 +6,8 @@
  * store, WhatsApp line, and contact details are available.
  */
 export const siteConfig = {
-  name: "iNoTech",
-  shortName: "iNoTech",
+  name: "inotech Maroc",
+  shortName: "inotech",
   description:
     "PC portables, périphériques, pièces et accessoires informatiques au meilleur prix, livrés partout au Maroc.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://inotech.ma",
