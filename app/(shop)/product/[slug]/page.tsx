@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getAllProductSlugs, getProductBySlug, getProductVariations, getRelatedProducts } from "@/lib/woocommerce/products";
 import { getProductReviews } from "@/lib/woocommerce/reviews";
 import { getCategoryPathById } from "@/lib/woocommerce/categories";
+import { getBrands } from "@/lib/woocommerce/brands";
 import { productMetadata } from "@/lib/seo/metadata";
 import { productJsonLd } from "@/lib/seo/json-ld";
 import { categoryHref } from "@/lib/utils/slug";
@@ -47,26 +48,6 @@ const TRUST_ITEMS = [
     ),
   },
   {
-    title: "Produits garantis",
-    description: "Des références sélectionnées avec une garantie clairement indiquée.",
-    icon: (
-      <>
-        <path d="M12 22s8-3 8-10V5l-8-3-8 3v7c0 7 8 10 8 10Z" />
-        <path d="m9 12 2 2 4-4" />
-      </>
-    ),
-  },
-  {
-    title: "Conseil technique",
-    description: "Une aide simple pour choisir une configuration cohérente.",
-    icon: (
-      <>
-        <path d="M4 4h16v16H4z" />
-        <path d="M8 12h8M12 8v8" />
-      </>
-    ),
-  },
-  {
     title: "SAV & accompagnement",
     description: "Une équipe disponible pour vous orienter après l'achat.",
     icon: (
@@ -78,6 +59,19 @@ const TRUST_ITEMS = [
   },
 ];
 
+/** Pure formatting from a real ISO date — no invented review metadata. */
+function relativeTimeFr(iso: string): string {
+  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000);
+  if (days < 1) return "aujourd'hui";
+  if (days < 7) return `il y a ${days} jour${days > 1 ? "s" : ""}`;
+  const weeks = Math.floor(days / 7);
+  if (weeks < 5) return `il y a ${weeks} semaine${weeks > 1 ? "s" : ""}`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `il y a ${months} mois`;
+  const years = Math.floor(days / 365);
+  return `il y a ${years} an${years > 1 ? "s" : ""}`;
+}
+
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
@@ -86,11 +80,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   const primaryCategory = product.categories[0];
 
-  const [variations, reviews, related, categoryNode] = await Promise.all([
+  const [variations, reviews, related, categoryNode, brands] = await Promise.all([
     product.type === "variable" ? getProductVariations(product.id) : Promise.resolve([]),
     getProductReviews(product.id),
     getRelatedProducts(product),
     primaryCategory ? getCategoryPathById(primaryCategory.id) : Promise.resolve(null),
+    getBrands(),
   ]);
 
   const breadcrumbItems = [
@@ -100,6 +95,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   // Real, existing attributes only — no invented "key features"/"condition" data.
   const visibleAttributes = product.attributes.filter((attr) => attr.visible !== false && attr.options.length > 0);
+  const chipSpecs = visibleAttributes.slice(0, 2);
   const highlightSpecs = visibleAttributes.slice(0, 4);
   const brand = product.brands?.[0];
   const hasDescription = product.description.trim().length > 0;
@@ -131,17 +127,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
 
         <div className="flex flex-col gap-6">
-          <ProductInfo product={product} variations={variations} />
+          <div>
+            {brand ? <p className="mb-1.5 text-xs font-bold uppercase tracking-wider text-brand">{brand.name}</p> : null}
+            <ProductInfo product={product} variations={variations} />
+          </div>
 
-          {highlightSpecs.length > 0 || brand || product.sku ? (
+          {chipSpecs.length > 0 ? (
             <div className="flex flex-wrap gap-2">
-              {brand ? (
-                <span className="rounded-full bg-surface-alt px-3 py-1.5 text-xs font-medium">Marque : {brand.name}</span>
-              ) : null}
-              {product.sku ? (
-                <span className="rounded-full bg-surface-alt px-3 py-1.5 text-xs font-medium">Réf. {product.sku}</span>
-              ) : null}
-              {highlightSpecs.map((attr) => (
+              {chipSpecs.map((attr) => (
                 <span key={attr.id} className="rounded-full bg-surface-alt px-3 py-1.5 text-xs font-medium">
                   {attr.name} : {attr.options.join(", ")}
                 </span>
@@ -149,7 +142,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
           ) : null}
 
-          <div className="grid gap-4 rounded-lg border border-border/15 p-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-4 rounded-lg border border-border/15 p-4">
             {TRUST_ITEMS.map((item) => (
               <div key={item.title} className="flex items-start gap-3">
                 <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-brand/10 text-brand">
@@ -182,25 +175,78 @@ export default async function ProductPage({ params }: ProductPageProps) {
       ) : null}
 
       {visibleAttributes.length > 0 ? (
-        <section className="mt-10 rounded-lg border border-border/15 p-6 md:p-10">
-          <h2 className="mb-6 text-2xl font-semibold">Caractéristiques techniques</h2>
-          <ProductSpecs attributes={product.attributes} />
+        <section className="mt-10 rounded-lg bg-surface-alt p-6 md:p-10">
+          <div className="grid gap-8 md:grid-cols-[240px_1fr]">
+            <h2 className="text-2xl font-semibold">Caractéristiques techniques</h2>
+            <ProductSpecs attributes={product.attributes} />
+          </div>
         </section>
       ) : null}
 
       <p className="mt-10 max-w-3xl text-sm leading-relaxed text-ink-muted">{aeoSummary}</p>
 
-      {hasDescription ? (
-        <section className="mt-10">
-          <h2 className="mb-4 text-2xl font-semibold">Description</h2>
-          <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: product.description }} />
-        </section>
+      <RelatedProducts products={related} />
+
+      <section className="mt-12">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+          <h2 className="text-2xl font-semibold">Avis clients</h2>
+          {hasRating ? (
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-brand" aria-hidden="true">
+                {"★".repeat(filledStars)}
+                {"☆".repeat(5 - filledStars)}
+              </span>
+              <strong>{ratingValue.toFixed(1)} / 5</strong>
+              <span className="text-ink-muted">({product.rating_count} avis)</span>
+            </div>
+          ) : null}
+        </div>
+
+        {reviews.length > 0 ? (
+          <div className="flex gap-4 overflow-x-auto pb-2" style={{ scrollSnapType: "x mandatory" }}>
+            {reviews.map((review) => (
+              <article
+                key={review.id}
+                className="flex min-w-[300px] max-w-[340px] flex-none flex-col gap-4 rounded-lg border border-border/15 p-6"
+                style={{ scrollSnapAlign: "start" }}
+              >
+                <span className="text-brand" aria-hidden="true">
+                  {"★".repeat(review.rating)}
+                  {"☆".repeat(5 - review.rating)}
+                </span>
+                <p
+                  className="text-sm leading-relaxed text-ink-muted"
+                  dangerouslySetInnerHTML={{ __html: review.review.replace(/<[^>]*>/g, "") }}
+                />
+                <div className="mt-auto flex items-center gap-3">
+                  <span className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-brand/10 text-sm font-semibold text-brand">
+                    {review.reviewer.charAt(0).toUpperCase()}
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold leading-tight">{review.reviewer}</p>
+                    <p className="text-xs text-ink-muted">{relativeTimeFr(review.date_created)}</p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <ProductReviews reviews={reviews} />
+        )}
+      </section>
+
+      {brands.length > 0 ? (
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 border-y border-border/15 py-8 text-sm font-semibold uppercase tracking-wide text-ink-muted">
+          {brands.map((b) => (
+            <span key={b.id}>{b.name}</span>
+          ))}
+        </div>
       ) : null}
 
-      {hasDocuments ? (
-        <section className="mt-10">
-          <h2 className="mb-4 text-2xl font-semibold">Documents</h2>
-          <ProductDocuments downloads={product.downloads} />
+      {hasDescription ? (
+        <section className="mt-12">
+          <h2 className="mb-4 text-2xl font-semibold">Description</h2>
+          <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: product.description }} />
         </section>
       ) : null}
 
@@ -209,23 +255,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <ProductFAQ metaData={product.meta_data} />
       </section>
 
-      <section className="mt-10">
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
-          <h2 className="text-2xl font-semibold">Avis ({product.rating_count})</h2>
-          {hasRating ? (
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-brand" aria-hidden="true">
-                {"★".repeat(filledStars)}
-                {"☆".repeat(5 - filledStars)}
-              </span>
-              <strong>{ratingValue.toFixed(1)} / 5</strong>
-            </div>
-          ) : null}
-        </div>
-        <ProductReviews reviews={reviews} />
-      </section>
-
-      <RelatedProducts products={related} />
+      {hasDocuments ? (
+        <section className="mt-10">
+          <h2 className="mb-4 text-2xl font-semibold">Documents</h2>
+          <ProductDocuments downloads={product.downloads} />
+        </section>
+      ) : null}
     </div>
   );
 }
