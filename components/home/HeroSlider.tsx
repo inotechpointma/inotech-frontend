@@ -42,6 +42,18 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
     >
       {slides.map((slide, i) => (
         <article key={slide.title} className={`hero-slide ${i === index ? "active" : ""}`} aria-hidden={i !== index}>
+          <div className="hero-bg">
+            <Image
+              src={slide.image.src}
+              alt={slide.image.alt}
+              fill
+              sizes="100vw"
+              priority={i === 0}
+              className="hero-bg-img"
+            />
+            <div className="hero-overlay" />
+          </div>
+
           <div className="hero-copy">
             <span className="eyebrow">{slide.eyebrow}</span>
             {i === 0 ? <h1>{slide.title}</h1> : <h2>{slide.title}</h2>}
@@ -54,9 +66,6 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                 {slide.secondaryCta.label}
               </Link>
             </div>
-          </div>
-          <div className="hero-art">
-            <Image src={slide.image.src} alt={slide.image.alt} width={720} height={520} priority={i === 0} />
           </div>
         </article>
       ))}

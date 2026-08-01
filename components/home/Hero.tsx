@@ -20,7 +20,7 @@ const DEFAULT_SLIDES: HeroSlide[] = [
       "Ordinateurs portables, écrans et accessoires sélectionnés pour travailler, créer et jouer avec confiance.",
     primaryCta: { label: "Découvrir les offres", href: "/shop" },
     secondaryCta: { label: "Explorer les catégories", href: "/shop" },
-    image: { src: "/hero/slide-1.svg", alt: "Ordinateur portable gaming présenté en promotion" },
+    image: { src: "/hero/macbook-zone.png", alt: "Ordinateur portable gaming présenté en promotion" },
   },
   {
     eyebrow: "Solutions professionnelles",
@@ -29,7 +29,7 @@ const DEFAULT_SLIDES: HeroSlide[] = [
       "Des configurations fiables, des conseils clairs et un accompagnement adapté aux besoins des professionnels.",
     primaryCta: { label: "Voir les PC professionnels", href: "/shop" },
     secondaryCta: { label: "Demander un devis", href: "/contact" },
-    image: { src: "/hero/slide-2.svg", alt: "Ordinateur professionnel" },
+    image: { src: "/hero/Pc-Gamer.jpeg", alt: "Ordinateur professionnel" },
   },
   {
     eyebrow: "Setup Gaming",
@@ -38,7 +38,7 @@ const DEFAULT_SLIDES: HeroSlide[] = [
       "Composez un setup cohérent avec des écrans rapides, des périphériques réactifs et des machines prêtes à jouer.",
     primaryCta: { label: "Construire mon setup", href: "/shop" },
     secondaryCta: { label: "Voir les moniteurs", href: "/shop" },
-    image: { src: "/hero/slide-3.svg", alt: "Moniteur gaming" },
+    image: { src: "/hero/Promotions-Gaming-Setup-Gamer-maroc-768x240.jpeg", alt: "Moniteur gaming" },
   },
 ];
 

@@ -44,8 +44,9 @@ export function ProductInfo({ product, variations }: { product: WCProduct; varia
         />
       ) : null}
 
-      <VariationSelector attributes={product.attributes} selected={selected} onSelect={(name, option) => setSelected((prev) => ({ ...prev, [name]: option }))} />
-
+{/* 
+        <VariationSelector attributes={product.attributes} selected={selected} onSelect={(name, option) => setSelected((prev) => ({ ...prev, [name]: option }))} />
+ */}
       <div className="flex items-center gap-3">
         <label className="flex items-center gap-2 text-sm">
           <span>Quantité</span>
@@ -58,6 +59,48 @@ export function ProductInfo({ product, variations }: { product: WCProduct; varia
           />
         </label>
       </div>
+
+      <section className="section">
+        <div className="trust-grid">
+          {[
+            {
+              title: "Livraison nationale",
+              description: "Partout le Maroc.",
+              icon: (
+                <>
+                  <path d="M3 6h13v11H3zM16 10h3l2 3v4h-5z" />
+                  <circle cx="7" cy="18" r="2" />
+                  <circle cx="18" cy="18" r="2" />
+                </>
+              ),
+            },
+            {
+              title: "Payement à la livraison",
+              description: "Payez à la réception.",
+              icon: (
+                <>
+                  <path d="M12 22s8-3 8-10V5l-8-3-8 3v7c0 7 8 10 8 10Z" />
+                  <path d="m9 12 2 2 4-4" />
+                </>
+              ),
+            },
+          ].map((item) => (
+            <article key={item.title} className="trust-card">
+              <span className="trust-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  {item.icon}
+                </svg>
+              </span>
+              <div>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    
+      
 
       <WhatsAppButton
         product={product}
