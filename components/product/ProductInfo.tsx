@@ -3,12 +3,11 @@
 import { useMemo, useState } from "react";
 import { ProductPrice } from "@/components/product/ProductPrice";
 import { StockBadge } from "@/components/product/StockBadge";
-import { VariationSelector } from "@/components/product/VariationSelector";
 import { WhatsAppButton } from "@/components/product/WhatsAppButton";
 import type { WCProduct, WCVariation } from "@/lib/woocommerce/types";
 
 export function ProductInfo({ product, variations }: { product: WCProduct; variations: WCVariation[] }) {
-  const [selected, setSelected] = useState<Record<string, string>>({});
+  const [selected] = useState<Record<string, string>>({});
   const [quantity, setQuantity] = useState(1);
 
   const matchedVariation = useMemo(() => {
