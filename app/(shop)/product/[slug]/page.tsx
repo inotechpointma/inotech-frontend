@@ -36,29 +36,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 // Real, existing copy — the same reassurance lines as components/home/TrustSection, reused here
 // (not imported directly: that component wraps its grid in .container, which would double-nest
 // inside the shop layout's own .container).
-const TRUST_ITEMS = [
-  {
-    title: "Livraison nationale",
-    description: "Expédition et suivi de commande partout au Maroc.",
-    icon: (
-      <>
-        <path d="M3 6h13v11H3zM16 10h3l2 3v4h-5z" />
-        <circle cx="7" cy="18" r="2" />
-        <circle cx="18" cy="18" r="2" />
-      </>
-    ),
-  },
-  {
-    title: "SAV & accompagnement",
-    description: "Une équipe disponible pour vous orienter après l'achat.",
-    icon: (
-      <>
-        <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
-        <path d="M3 3v5h5" />
-      </>
-    ),
-  },
-];
+
 
 /** Pure formatting from a real ISO date — no invented review metadata. */
 function relativeTimeFr(iso: string): string {
@@ -81,12 +59,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   const primaryCategory = product.categories[0];
 
-  const [variations, reviews, related, categoryNode, brands] = await Promise.all([
+  const [variations, reviews, related, categoryNode] = await Promise.all([
     product.type === "variable" ? getProductVariations(product.id) : Promise.resolve([]),
     getProductReviews(product.id),
     getRelatedProducts(product),
     primaryCategory ? getCategoryPathById(primaryCategory.id) : Promise.resolve(null),
-    getBrands(),
   ]);
 
   const breadcrumbItems = [
@@ -99,7 +76,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const chipSpecs = visibleAttributes.slice(0, 2);
   const highlightSpecs = visibleAttributes.slice(0, 4);
   const brand = product.brands?.[0];
-  const hasDescription = product.description.trim().length > 0;
   const hasDocuments = (product.downloads?.length ?? 0) > 0;
   const ratingValue = Number(product.average_rating);
   const hasRating = product.rating_count > 0 && Number.isFinite(ratingValue) && ratingValue > 0;
@@ -168,7 +144,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </section>
       ) : null}
 
-      {/* <p className="mt-10 max-w-3xl text-sm leading-relaxed text-ink-muted">{aeoSummary}</p> */}
+      <p className="mt-10 max-w-3xl text-sm leading-relaxed text-ink-muted">{aeoSummary}</p> 
 
       <ProductDescription html={product.description} />
 
