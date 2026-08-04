@@ -6,6 +6,31 @@ import { StockBadge } from "@/components/product/StockBadge";
 import { WhatsAppButton } from "@/components/product/WhatsAppButton";
 import type { WCProduct, WCVariation } from "@/lib/woocommerce/types";
 
+const TRUST_ITEMS = [
+  {
+    title: "Livraison nationale",
+    description: "Expédition et suivi de commande partout au Maroc.",
+    icon: (
+      <>
+        <path d="M3 6h13v11H3zM16 10h3l2 3v4h-5z" />
+        <circle cx="7" cy="18" r="2" />
+        <circle cx="18" cy="18" r="2" />
+      </>
+    ),
+  },
+  {
+    title: "Produits garantis",
+    description: "Des références sélectionnées avec une garantie clairement indiquée.",
+    icon: (
+      <>
+        <path d="M12 22s8-3 8-10V5l-8-3-8 3v7c0 7 8 10 8 10Z" />
+        <path d="m9 12 2 2 4-4" />
+      </>
+    ),
+  },
+];
+
+
 export function ProductInfo({ product, variations }: { product: WCProduct; variations: WCVariation[] }) {
   const [selected] = useState<Record<string, string>>({});
   const [quantity, setQuantity] = useState(1);
@@ -60,52 +85,30 @@ export function ProductInfo({ product, variations }: { product: WCProduct; varia
       </div>
 
       <section className="section">
-        <div className="trust-grid">
-          {[
-            {
-              title: "Livraison nationale",
-              description: "Partout le Maroc.",
-              icon: (
-                <>
-                  <path d="M3 6h13v11H3zM16 10h3l2 3v4h-5z" />
-                  <circle cx="7" cy="18" r="2" />
-                  <circle cx="18" cy="18" r="2" />
-                </>
-              ),
-            },
-            {
-              title: "Payement à la livraison",
-              description: "Payez à la réception.",
-              icon: (
-                <>
-                  <path d="M12 22s8-3 8-10V5l-8-3-8 3v7c0 7 8 10 8 10Z" />
-                  <path d="m9 12 2 2 4-4" />
-                </>
-              ),
-            },
-          ].map((item) => (
-            <article key={item.title} className="trust-card">
-              <span className="trust-icon">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  {item.icon}
-                </svg>
-              </span>
-              <div>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
+        <div className="flex flex-col gap-4 rounded-lg border border-border/15 p-4">
+            {TRUST_ITEMS.map((item) => (
+              <div key={item.title} className="flex items-start gap-3">
+                <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-brand/10">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 20, height: 20 }} className="fill-brand">
+                    {item.icon}
+                  </svg>
+                </span>
+                <div>
+                  <p className="text-sm font-semibold leading-tight text-brand">{item.title}</p>
+                  <p className="text-xs text-ink-muted">{item.description}</p>
+                </div>
               </div>
-            </article>
-          ))}
-        </div>
+            ))}
+          </div>
       </section>
     
       
 
-      <WhatsAppButton
+      <WhatsAppButton 
         product={product}
         variation={matchedVariation}
         quantity={quantity}
-        className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-pill bg-whatsapp font-semibold text-white hover:opacity-90 sm:w-auto sm:px-8"
+        className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-pill bg-brand font-semibold text-white hover:opacity-90 sm:w-auto sm:px-8"
       />
     </div>
   );

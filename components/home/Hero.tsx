@@ -20,7 +20,7 @@ const DEFAULT_SLIDES: HeroSlide[] = [
       "Ordinateurs portables, écrans et accessoires sélectionnés pour travailler, créer et jouer avec confiance.",
     primaryCta: { label: "Découvrir les offres", href: "/shop" },
     secondaryCta: { label: "Explorer les catégories", href: "/shop" },
-    image: { src: "/hero/macbook-zone.png", alt: "Ordinateur portable gaming présenté en promotion" },
+    image: { src: "/hero/hero-slide-1.png", alt: "Ordinateur portable gaming présenté en promotion" },
   },
   {
     eyebrow: "Solutions professionnelles",
@@ -29,7 +29,7 @@ const DEFAULT_SLIDES: HeroSlide[] = [
       "Des configurations fiables, des conseils clairs et un accompagnement adapté aux besoins des professionnels.",
     primaryCta: { label: "Voir les PC professionnels", href: "/shop" },
     secondaryCta: { label: "Demander un devis", href: "/contact" },
-    image: { src: "/hero/Pc-Gamer.jpeg", alt: "Ordinateur professionnel" },
+    image: { src: "/hero/hero-slide-2.png", alt: "Ordinateur professionnel" },
   },
   {
     eyebrow: "Setup Gaming",
@@ -38,7 +38,7 @@ const DEFAULT_SLIDES: HeroSlide[] = [
       "Composez un setup cohérent avec des écrans rapides, des périphériques réactifs et des machines prêtes à jouer.",
     primaryCta: { label: "Construire mon setup", href: "/shop" },
     secondaryCta: { label: "Voir les moniteurs", href: "/shop" },
-    image: { src: "/hero/Promotions-Gaming-Setup-Gamer-maroc-768x240.jpeg", alt: "Moniteur gaming" },
+    image: { src: "/hero/hero-slide-3.png", alt: "Moniteur gaming" },
   },
 ];
 
@@ -50,16 +50,16 @@ const DEFAULT_SIDE_CARDS: SideCard[] = [
     title: "Votre commande, partout au Maroc.",
     description: "Suivi clair et assistance avant comme après l'achat.",
     cta: { label: "Nos engagements", href: "/about", variant: "btn-primary" },
-    image: { src: "/hero/side-delivery.svg", alt: "" },
+    image: { src: "/hero/hero-2.png", alt: "" },
   },
   {
     tone: "warning",
     eyebrow: "Conseil personnalisé",
     eyebrowColor: "#60561C",
-    title: "Besoin de la bonne configuration ?",
+    title: "Besoin de bonne configuration ?",
     description: "Expliquez votre usage, nous vous orientons vers le matériel adapté.",
     cta: { label: "Parler à un conseiller", href: "/contact", variant: "btn-secondary" },
-    image: { src: "/hero/side-advice.svg", alt: "" },
+    image: { src: "/hero/hero-3.png", alt: "" },
   },
 ];
 
@@ -78,8 +78,22 @@ export function Hero({
         <aside className="hero-side" aria-label="Offres complémentaires">
           {sideCards.map((card) => (
             <article key={card.title} className={`side-card ${card.tone}`}>
-              <div>
-                <span className="eyebrow" style={{ background: "#fff", color: card.eyebrowColor }}>
+              {card.image.src ? (
+                <div className="side-card-bg">
+                  <Image
+                    src={card.image.src}
+                    alt={card.image.alt}
+                    fill
+                    sizes="(max-width: 900px) 100vw, 25vw"
+                    aria-hidden={!card.image.alt}
+                    className="side-card-bg-img"
+                  />
+                  <div className="side-card-overlay" />
+                </div>
+              ) : null}
+
+              <div className="side-card-copy">
+                <span className="eyebrow" >
                   {card.eyebrow}
                 </span>
                 <h3>{card.title}</h3>
@@ -88,9 +102,6 @@ export function Hero({
                   {card.cta.label}
                 </Link>
               </div>
-              {card.image.src ? (
-                <Image src={card.image.src} alt={card.image.alt} width={300} height={300} aria-hidden={!card.image.alt} />
-              ) : null}
             </article>
           ))}
         </aside>

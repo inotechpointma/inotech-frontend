@@ -16,7 +16,7 @@ const DEFAULT_CAMPAIGN: CampaignPanelContent = {
   description:
     "Une sélection de produits performants pour chaque usage, soigneusement choisis pour répondre à vos besoins.",
   cta: { label: "Explorer les produits", href: "/shop" },
-  image: { src: "/hero/default-campaign.svg", alt: "Campaign image" }
+  image: { src: "/hero/popular-camp.png", alt: "Campaign image" }
 };
 
 /**
@@ -42,7 +42,21 @@ export function CampaignSection({
     <section className="section" id={id}>
       <div className="container merch-grid">
         
-          <article className="campaign-panel">
+        <article className="campaign-panel">
+          {campaign.image && (
+            <div className="campaign-bg">
+              <Image
+                src={campaign.image.src}
+                alt={campaign.image.alt}
+                fill
+                sizes="(max-width: 900px) 100vw, 40vw"
+                className="campaign-bg-img"
+              />
+              <div className="campaign-overlay" />
+            </div>
+          )}
+
+          <div className="campaign-copy">
             {campaign.eyebrow && <span className="eyebrow">{campaign.eyebrow}</span>}
             <h2>{campaign.title}</h2>
             <p>{campaign.description}</p>
@@ -51,10 +65,8 @@ export function CampaignSection({
                 {campaign.cta.label}
               </Link>
             )}
-            {campaign.image && (
-              <Image src={campaign.image.src} alt={campaign.image.alt} width={600} height={400} />
-            )}
-          </article>
+          </div>
+        </article>
 
         <div className="tab-shell">
           <div className="section-title-row">
@@ -72,4 +84,5 @@ export function CampaignSection({
       </div>
     </section>
   );
+
 }

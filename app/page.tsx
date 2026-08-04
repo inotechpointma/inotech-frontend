@@ -76,7 +76,7 @@ export default async function HomePage() {
             "PC portables et de bureau taillés pour le gaming, sélectionnés selon leur puissance et leur rapport qualité-prix.",
           cta: { label: "Explorer le gaming", href: "/shop?tag=gaming" },
           image: {
-            src: "/hero/campaign-gaming.svg",
+            src: "/hero/popular.png",
             alt: "Setup gaming avec PC et périphériques",
           },
         }}

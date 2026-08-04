@@ -15,21 +15,21 @@ const DEFAULT_CARDS: LifestyleCard[] = [
     title: "Travaillez partout.",
     description: "Des portables légers et fiables pour rester productif en déplacement.",
     cta: { label: "Explorer", href: "/shop" },
-    image: { src: "/hero/lifestyle-mobility.svg", alt: "Ordinateur portable pour mobilité" },
+    image: { src: "/hero/mobilité.png", alt: "Ordinateur portable pour mobilité" },
   },
   {
     eyebrow: "Création",
     title: "Voyez chaque détail.",
     description: "Des écrans précis et confortables pour la création et le multitâche.",
     cta: { label: "Explorer", href: "/shop" },
-    image: { src: "/hero/lifestyle-creation.svg", alt: "Écran pour création et productivité" },
+    image: { src: "/hero/hero-3.png", alt: "Écran pour création et productivité" },
   },
   {
     eyebrow: "Connexion",
     title: "Un réseau plus stable.",
     description: "Routeurs et solutions réseau pour la maison, le bureau et le gaming.",
     cta: { label: "Explorer", href: "/shop" },
-    image: { src: "/hero/lifestyle-network.svg", alt: "Routeur Wi-Fi" },
+    image: { src: "/hero/hero-2.png", alt: "Routeur Wi-Fi" },
   },
 ];
 
@@ -40,13 +40,25 @@ export function LifestyleSection({ id, cards = DEFAULT_CARDS }: { id?: string; c
       <div className="container lifestyle-grid">
         {cards.map((card) => (
           <article key={card.title} className="lifestyle-card">
-            <span className="eyebrow">{card.eyebrow}</span>
-            <h3>{card.title}</h3>
-            <p>{card.description}</p>
-            <Link className="btn btn-secondary" href={card.cta.href}>
-              {card.cta.label}
-            </Link>
-            <Image src={card.image.src} alt={card.image.alt} width={500} height={400} />
+            <div className="lifestyle-bg">
+              <Image
+                src={card.image.src}
+                alt={card.image.alt}
+                fill
+                sizes="(max-width: 900px) 100vw, 33vw"
+                className="lifestyle-bg-img"
+              />
+              <div className="lifestyle-overlay" />
+            </div>
+
+            <div className="lifestyle-copy">
+              <span className="eyebrow">{card.eyebrow}</span>
+              <h3>{card.title}</h3>
+              <p>{card.description}</p>
+              <Link className="btn btn-secondary" href={card.cta.href}>
+                {card.cta.label}
+              </Link>
+            </div>
           </article>
         ))}
       </div>

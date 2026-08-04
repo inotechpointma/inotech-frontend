@@ -15,6 +15,7 @@ import { ProductReviews } from "@/components/product/ProductReviews";
 import { ProductFAQ } from "@/components/product/ProductFAQ";
 import { ProductDocuments } from "@/components/product/ProductDocuments";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
+import { ProductDescription } from "@/components/product/ProductDescription";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -141,22 +142,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
               ))}
             </div>
           ) : null}
-
-          <div className="flex flex-col gap-4 rounded-lg border border-border/15 p-4">
-            {TRUST_ITEMS.map((item) => (
-              <div key={item.title} className="flex items-start gap-3">
-                <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-brand/10 text-brand">
-                  <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 20, height: 20 }}>
-                    {item.icon}
-                  </svg>
-                </span>
-                <div>
-                  <p className="text-sm font-semibold leading-tight">{item.title}</p>
-                  <p className="text-xs text-ink-muted">{item.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
@@ -183,9 +168,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </section>
       ) : null}
 
-      <p className="mt-10 max-w-3xl text-sm leading-relaxed text-ink-muted">{aeoSummary}</p>
+      {/* <p className="mt-10 max-w-3xl text-sm leading-relaxed text-ink-muted">{aeoSummary}</p> */}
 
-      <RelatedProducts products={related} />
+      <ProductDescription html={product.description} />
 
       <section className="mt-12">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
@@ -235,25 +220,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
         )}
       </section>
 
-      {brands.length > 0 ? (
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 border-y border-border/15 py-8 text-sm font-semibold uppercase tracking-wide text-ink-muted">
-          {brands.map((b) => (
-            <span key={b.id}>{b.name}</span>
-          ))}
-        </div>
-      ) : null}
-
-      {hasDescription ? (
-        <section className="mt-12">
-          <h2 className="mb-4 text-2xl font-semibold">Description</h2>
-          <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: product.description }} />
-        </section>
-      ) : null}
-
       <section className="mt-10">
         <h2 className="mb-4 text-2xl font-semibold">Questions fréquentes</h2>
         <ProductFAQ metaData={product.meta_data} />
       </section>
+      
+      <RelatedProducts products={related} />
+
+
+      
 
       {hasDocuments ? (
         <section className="mt-10">
