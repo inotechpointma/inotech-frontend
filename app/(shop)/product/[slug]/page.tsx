@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { getAllProductSlugs, getProductBySlug, getProductVariations, getRelatedProducts } from "@/lib/woocommerce/products";
 import { getProductReviews } from "@/lib/woocommerce/reviews";
 import { getCategoryPathById } from "@/lib/woocommerce/categories";
-import { getBrands } from "@/lib/woocommerce/brands";
 import { productMetadata } from "@/lib/seo/metadata";
 import { productJsonLd } from "@/lib/seo/json-ld";
 import { categoryHref } from "@/lib/utils/slug";
