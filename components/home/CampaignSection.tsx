@@ -12,9 +12,9 @@ export interface CampaignPanelContent {
 }
 
 const DEFAULT_CAMPAIGN: CampaignPanelContent = {
-  title: "Découvrez notre sélection de produits performants.",
+  title: "Nos produits performants.",
   description:
-    "Une sélection de produits performants pour chaque usage, soigneusement choisis pour répondre à vos besoins.",
+    "Une sélection de produits performants pour chaque usage..",
   cta: { label: "Explorer les produits", href: "/shop" },
   image: { src: "/hero/popular-camp.png", alt: "Campaign image" }
 };

@@ -73,7 +73,7 @@ export default async function HomePage() {
           eyebrow: "Sélection Inotech",
           title: "Jouez sans compromis.",
           description:
-            "PC portables et de bureau taillés pour le gaming, sélectionnés selon leur puissance et leur rapport qualité-prix.",
+            "Tous les produits pour le gaming, chez Inotech.",
           cta: { label: "Explorer le gaming", href: "/shop?tag=gaming" },
           image: {
             src: "/hero/popular.png",

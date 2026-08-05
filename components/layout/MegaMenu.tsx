@@ -36,7 +36,7 @@ export function MegaMenu({ categories }: { categories: CategoryNode[] }) {
     <header className={cn("site-header", scrolled && "scrolled")}>
       <div className="container header-main">
         <Link className="logo" href="/" aria-label={`${siteConfig.shortName} accueil`} onClick={closeAll}>
-          <img src="/inotech_logo_main.svg" alt={siteConfig.shortName} width={150} />
+          <img src="/inotech_logo_main_white.svg" alt={siteConfig.shortName} width={150} />
         </Link>
 
         <SearchBar />

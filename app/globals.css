@@ -279,7 +279,7 @@ h6 {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--surface-soft);
+  background: var(--primary-500);
   color: var(--primary-900);
   transition: box-shadow 0.25s ease;
 }
@@ -364,7 +364,7 @@ h6 {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-icon-wtsp {
+.icon-wtsp {
   fill: var(--surface);
 }
 .search-results {
@@ -958,6 +958,9 @@ icon-wtsp {
   background: var(--primary-700);
   padding: var(--padding-card);
   transition: transform 0.25s ease;
+  box-shadow:
+    0 0 0 4px #fff,               /* espace (gap) — reprend le fond de .category-strip */
+    0 0 0 6px var(--primary-500); /* anneau extérieur */
 }
 .category-tile:hover .category-image {
   transform: translateY(-5px);
@@ -1194,7 +1197,7 @@ icon-wtsp {
 
 .brand-marquee-slide {
   flex: 0 0 auto;
-  padding: 0 32px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1209,7 +1212,7 @@ icon-wtsp {
   z-index: 1;
 }
 
-.brand-marquee-fade-left {
+/* .brand-marquee-fade-left {
   left: 0;
   background: linear-gradient(to right, var(--surface-soft), transparent);
 }
@@ -1217,7 +1220,7 @@ icon-wtsp {
 .brand-marquee-fade-right {
   right: 0;
   background: linear-gradient(to left, var(--surface-soft), transparent);
-}
+} */
 
 /* Split merchandising */
 .merch-grid {
@@ -1363,6 +1366,7 @@ icon-wtsp {
   padding: 32px;
   height: 100%;
   display: flex;
+  justify-content: flex-end;
   flex-direction: column;
   align-items: flex-start;
 }

@@ -14,6 +14,15 @@ export interface SideCard {
 
 const DEFAULT_SLIDES: HeroSlide[] = [
   {
+    eyebrow: "Setup Gaming",
+    title: "Plus de fluidité. Plus de précision.",
+    description:
+      "Composez un setup cohérent avec des écrans rapides, des périphériques réactifs et des machines prêtes à jouer.",
+    primaryCta: { label: "Construire mon setup", href: "/shop" },
+    secondaryCta: { label: "Voir les moniteurs", href: "/shop" },
+    image: { src: "/hero/hero-slide-3.png", alt: "Moniteur gaming" },
+  },
+  {
     eyebrow: "Rentrée Tech 2026",
     title: "La performance adaptée à votre quotidien.",
     description:
@@ -30,15 +39,6 @@ const DEFAULT_SLIDES: HeroSlide[] = [
     primaryCta: { label: "Voir les PC professionnels", href: "/shop" },
     secondaryCta: { label: "Demander un devis", href: "/contact" },
     image: { src: "/hero/hero-slide-2.png", alt: "Ordinateur professionnel" },
-  },
-  {
-    eyebrow: "Setup Gaming",
-    title: "Plus de fluidité. Plus de précision.",
-    description:
-      "Composez un setup cohérent avec des écrans rapides, des périphériques réactifs et des machines prêtes à jouer.",
-    primaryCta: { label: "Construire mon setup", href: "/shop" },
-    secondaryCta: { label: "Voir les moniteurs", href: "/shop" },
-    image: { src: "/hero/hero-slide-3.png", alt: "Moniteur gaming" },
   },
 ];
 
